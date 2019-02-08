@@ -110,17 +110,72 @@ namespace my
 		inline const T* const* data() const noexcept { return elem_; }
 		inline size_t size() const noexcept { return sz_; }
 
-		void swap(const SimpleArray& other)
+		void swap(const SimpleArray& other) noexcept
 		{
 			std::swap(this->elem_, other.elem_);
 			std::swap(this->sz_, other.sz_);
 		}
 
-		inline void swap_elems(size_t left, size_t right) noexcept 
+		inline void swap_elems(const size_t left, const size_t right) noexcept 
 		{ 
 			range_check(left);
 			range_check(right);
 			std::swap(elem_[left], elem_[right]); 
+		}
+
+		bool operator==(const SimpleArray& other) noexcept
+		{
+			if(sz_ != other.sz_) return false;
+			for(size_t i = 0; i < sz_; ++i)
+			{
+				if(*(elem_[i]) != *(other.elem_[i])) return false;
+			}
+			return true;
+		}
+		bool operator!=(const SimpleArray& other) noexcept
+		{
+			if(sz_ != other.sz_) return true;
+			for(size_t i = 0; i < sz_; ++i)
+			{
+				if(*(elem_[i]) != *(other.elem_[i])) return true;
+			}
+			return false;
+		}
+
+		bool operator<(const SimpleArray& other) noexcept
+		{
+			for(size_t i = 0; (i < sz_) && (i < other.sz_); ++i)
+			{
+				if(*(elem_[i]) < *(other.elem_[i])) return true;
+				if(*(other.elem_[i]) < *(elem_[i])) return false;
+			}
+			return (i == sz_) && (i != other.sz_);
+		}
+		bool operator>(const SimpleArray& other) noexcept
+		{
+			for(size_t i = 0; (i < sz_) && (i < other.sz_); ++i)
+			{
+				if(*(elem_[i]) > *(other.elem_[i])) return true;
+				if(*(other.elem_[i]) > *(elem_[i])) return false;
+			}
+			return (i == sz_) && (i != other.sz_);
+		}
+
+		bool operator<=(const SimpleArray& other) noexcept
+		{
+			for(size_t i = 0; (i < sz_) && (i < other.sz_); ++i)
+			{
+				if(*(elem_[i]) > *(other.elem_[i])) return false;
+			}
+			return true;
+		}
+		bool operator>=(const SimpleArray& other) noexcept
+		{
+			for(size_t i = 0; (i < sz_) && (i < other.sz_); ++i)
+			{
+				if(*(elem_[i]) < *(other.elem_[i])) return false;
+			}
+			return true;
 		}
 
 		inline T** ptr_begin() noexcept { return elem_; }
